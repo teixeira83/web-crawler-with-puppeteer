@@ -11,13 +11,10 @@ class Operations {
         await page.type('#servidor_matricula', login);
         await page.type('#servidor_password', senha);
 
-        await page.evaluate(() => {
-            document.querySelector('input[type=submit]').click();
-        });
-
-        await this.sleep(5000);
-        await this.tirarScreenshot(page);
+        await page.click('input[type=submit]');
         
+        await this.sleep(5000);
+
         const logado = await this.estouLogado(page);
 
         if (logado) {
@@ -35,12 +32,32 @@ class Operations {
         var start = new Date().getTime();
         var end = start;
         while(end < start + ms) {
-        end = new Date().getTime();
+            end = new Date().getTime();
     }
+}
+
+    async fecharBrowsers() {
+        const browser = puppeteer.launch();
+        // const browsers = await (await browser).targets();
+        
+        // console.log(browsers);
+        // console.log(`tamanho do array de browser = ${browsers.length}`);
+        // (await browser).close();
+
+        // browsers = await (await browser).targets();
+        // console.log(`tamanho do array de browser = ${browsers.length}`);
     }
 
-    async fecharBrowser(browser) {
-        await browser.close();
+    async fecharPaginas() {
+        const tempBrowser = puppeteer.launch();
+
+        const pages = await (await tempBrowser).pages();
+
+        for(let p of pages) {
+            p.close();
+        }
+
+        console.log('Paginas fechadas com sucesso');
     }
 
     /*
